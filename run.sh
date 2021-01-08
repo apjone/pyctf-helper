@@ -1,7 +1,9 @@
 #!/bin/bash
 export FLASK_APP=pp42
 export FLASK_ENV=development
-#static/winPEAS.bat
+
+if [ ! -d uploads ] ; then mkdir -v uploads ; fi
+
 if [  ! `find static -type f -mtime -7 -name linpeas.sh` ] ; then 
 	while [[ "$linupdate" != "n" && "$linupdate" != "y" ]]
 	do
