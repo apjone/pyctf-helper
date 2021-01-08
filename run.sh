@@ -1,5 +1,5 @@
 #!/bin/bash
-export FLASK_APP=pp42
+export FLASK_APP=pyctf-helper
 export FLASK_ENV=development
 
 if [ ! -d uploads ] ; then mkdir -v uploads ; fi
