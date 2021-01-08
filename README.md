@@ -49,3 +49,6 @@ To change the listen address or port that this application runs on change the la
 The default local port to connect back to is set to `4444` as this is used in many examples online ( thanks to metasploit ), if you wish to change this then edit `pyctf-helper.py` and change 
 
 > prefered_port = '4444'
+
+## Standing on the shoulders of giants
+The revershells used in this script all came from the great [Pen Test Monkey Reverse Shell Cheat Sheet Page](http://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet)
